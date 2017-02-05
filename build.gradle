@@ -1,0 +1,24 @@
+group 'ru.gildor.coroutines.retrofit'
+version '0.1'
+
+apply plugin: 'kotlin'
+
+sourceSets {
+    main.java.srcDirs += 'src/main/kotlin'
+    test.java.srcDirs += 'src/test/kotlin'
+}
+
+targetCompatibility = '1.6'
+sourceCompatibility = '1.6'
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_version"
+    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.6-beta'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+}
+
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}
