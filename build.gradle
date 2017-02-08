@@ -12,8 +12,8 @@ targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$rootProject.kotlin_version"
-    compile 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.6-beta'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines_version"
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
 }
 
