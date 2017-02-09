@@ -1,5 +1,6 @@
 package ru.gildor.coroutines.retrofit
 
+import kotlinx.coroutines.experimental.CancellableContinuation
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
@@ -12,7 +13,7 @@ suspend fun <T> Call<T>.await(): T {
                 if (response.isSuccessful) {
                     continuation.resume(response.body())
                 } else {
-                    continuation.resumeWithException(HttpException(response))
+                    continuation.resumeWithException(HttpError(response))
                 }
             }
 
@@ -22,18 +23,40 @@ suspend fun <T> Call<T>.await(): T {
             }
         })
 
-        continuation.onCompletion {
-            if (continuation.isCancelled)
-                try {
-                    cancel()
-                } catch (ex: Throwable) {
-                    //Ignore cancel exception
-                }
-        }
+        registerOnCompletion(continuation)
     }
 }
 
-class HttpException(private val response: Response<*>) : RuntimeException() {
-    override val message: String?
-        get() = "Status ${response.code()}: ${response.message()}"
+suspend fun <T> Call<T>.awaitResult(): Result<T> {
+    return suspendCancellableCoroutine { continuation ->
+        enqueue(object : Callback<T> {
+            override fun onResponse(call: Call<T>?, response: Response<T>) {
+                continuation.resume(
+                        if (response.isSuccessful) {
+                            Result.Ok(response.body(), response.raw())
+                        } else {
+                            Result.Error<T>(HttpError(response), response.raw())
+                        }
+                )
+            }
+
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                if (call.isCanceled) return
+                continuation.resume(Result.Exception(t))
+            }
+        })
+
+        registerOnCompletion(continuation)
+    }
+}
+
+private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*>) {
+    continuation.onCompletion {
+        if (continuation.isCancelled)
+            try {
+                cancel()
+            } catch (ex: Throwable) {
+                //Ignore cancel exception
+            }
+    }
 }
