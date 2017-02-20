@@ -36,9 +36,63 @@ class CallAwaitTest {
             }
             is Result.Error, is Result.Exception -> fail()
             else -> fail()
-
         }
     }
+
+    @Test
+    fun asyncResultByType() = testBlocking {
+        val result = MockedCall(DONE).awaitResult()
+        when (result) {
+            is ResponseResult -> {
+                assertEquals(200, result.response.code())
+            }
+            is ErrorResult -> fail()
+            else -> fail()
+        }
+    }
+
+    @Test
+    fun resultOkTypes() = testBlocking {
+        val result = MockedCall(DONE).awaitResult()
+        if (result is ResponseResult) {
+            // Mocked raw response doesn't contain body, but we can check code
+            assertTrue(result.response.isSuccessful)
+        }
+
+        assertFalse(result is ErrorResult)
+    }
+
+    @Test
+    fun resultErrorTypes() = testBlocking {
+        val errorResponse = errorResponse(500)
+        val httpError = HttpError(errorResponse)
+        val errorResult = MockedCall(error = httpError).awaitResult()
+
+        if (errorResult is ResponseResult) {
+            assertEquals(500, errorResult.response.code())
+        } else {
+            fail()
+        }
+
+        if (errorResult is ErrorResult) {
+            assertEquals(httpError.toString(), errorResult.exception.toString())
+        } else {
+            fail()
+        }
+    }
+
+    @Test
+    fun resultExceptionTypes() = testBlocking {
+        val exception = IllegalStateException()
+        val errorResult = MockedCall(exception = exception).awaitResult()
+
+        if (errorResult is ErrorResult) {
+            assertEquals(exception, errorResult.exception)
+        }
+
+        assertFalse(errorResult is ResponseResult)
+    }
+
 
     @Test
     fun asyncResultError() = testBlocking {
@@ -46,9 +100,9 @@ class CallAwaitTest {
         val result = MockedCall(error = error).awaitResult()
         when (result) {
             is Result.Error -> {
-                assertEquals(error.code, result.error.code)
-                assertEquals(error.message, result.error.message)
-                assertEquals("Error response 500", result.error.errorBody.string())
+                assertEquals(error.code, result.exception.code)
+                assertEquals(error.message, result.exception.message)
+                assertEquals("Error response 500", result.exception.errorBody.string())
                 assertEquals(500, result.response.code())
             }
             is Result.Ok, is Result.Exception -> fail()
@@ -62,7 +116,7 @@ class CallAwaitTest {
         val result = MockedCall(exception = exception).awaitResult()
         when (result) {
             is Result.Exception -> {
-                assertEquals(exception.javaClass, result.exception.javaClass)
+                assertEquals(exception::class.java, result.exception::class.java)
                 assertEquals(exception.message, result.exception.message)
             }
             is Result.Ok, is Result.Error -> fail()

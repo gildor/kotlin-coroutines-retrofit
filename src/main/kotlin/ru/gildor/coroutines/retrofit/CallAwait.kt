@@ -6,6 +6,11 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+/**
+ * Suspend extension that allows suspend [Call] inside coroutine.
+ *
+ * @return Result of request or throw exception
+ */
 suspend fun <T> Call<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
@@ -33,6 +38,12 @@ suspend fun <T> Call<T>.await(): T {
     }
 }
 
+/**
+ * Suspend extension that allows suspend [Call] inside coroutine.
+ *
+ * @return sealed class [Result] object that can be
+ *         casted to [Result.Ok] (success) or [Result.Error] (HTTP error) and [Result.Exception] (other errors)
+ */
 suspend fun <T> Call<T>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
@@ -41,7 +52,7 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
                         if (response.isSuccessful) {
                             Result.Ok(response.body(), response.raw())
                         } else {
-                            Result.Error<T>(HttpError(response), response.raw())
+                            Result.Error(HttpError(response), response.raw())
                         }
                 )
             }
@@ -58,7 +69,7 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
 }
 
 private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*>) {
-    continuation.onCompletion {
+    continuation.invokeOnCompletion {
         if (continuation.isCancelled)
             try {
                 cancel()
@@ -67,3 +78,4 @@ private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*
             }
     }
 }
+
