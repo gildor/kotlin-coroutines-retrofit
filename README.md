@@ -45,9 +45,9 @@ fun main(args: Array<String>) = runBlocking {
         val user: User = api.getUser("username").await()
         // Now we can work with result object
         println("User ${user.name} loaded")
-    } catch (e: HttpError) {
+    } catch (e: HttpException) {
         // Catch http errors
-        println("exception${e.code}", e)
+        println("exception${e.code()}", e)
     } catch (e: Throwable) {
         // All other exceptions (non-http)
         println("Something broken", e)
@@ -72,7 +72,7 @@ fun main(args: Array<String>) = runBlocking {
         //Successful HTTP result
         is Result.Ok -> saveToDb(result.value)
         // Any HTTP error
-        is Result.Error -> log("HTTP error with code ${result.error.code}", result.error)
+        is Result.Error -> log("HTTP error with code ${result.error.code()}", result.error)
         // Exception while request invocation
         is Result.Exception -> log("Something broken", e)
     }
@@ -91,7 +91,7 @@ fun main(args: Array<String>) = runBlocking {
     //Return result or default value
     result.getOrDefault(User("empty-user"))
     
-    //Return value or throw exception (HttpError or original exception)
+    //Return value or throw exception (HttpException or original exception)
     result.getOrThrow()
     //Also supports custom exceptions to override original ones
     result.getOrThrow(IlleagalStateException("User request failed"))

@@ -1,6 +1,7 @@
 package ru.gildor.coroutines.retrofit
 
 import okhttp3.Response
+import retrofit2.HttpException
 
 /**
  * Sealed class of Http result
@@ -19,7 +20,7 @@ sealed class Result<out T> {
      * HTTP error
      */
     class Error(
-            override val exception: HttpError,
+            override val exception: HttpException,
             override val response: Response
     ) : Result<Nothing>(), ErrorResult, ResponseResult
 

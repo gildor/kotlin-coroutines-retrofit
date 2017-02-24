@@ -4,6 +4,7 @@ import kotlinx.coroutines.experimental.CancellableContinuation
 import kotlinx.coroutines.experimental.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
 
 /**
@@ -18,7 +19,7 @@ suspend fun <T> Call<T>.await(): T {
                 if (response.isSuccessful) {
                     continuation.resume(response.body())
                 } else {
-                    continuation.resumeWithException(HttpError(response))
+                    continuation.resumeWithException(HttpException(response))
                 }
             }
 
@@ -52,7 +53,7 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
                         if (response.isSuccessful) {
                             Result.Ok(response.body(), response.raw())
                         } else {
-                            Result.Error(HttpError(response), response.raw())
+                            Result.Error(HttpException(response), response.raw())
                         }
                 )
             }
