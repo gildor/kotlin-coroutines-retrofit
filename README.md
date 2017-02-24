@@ -47,7 +47,7 @@ fun main(args: Array<String>) = runBlocking {
         println("User ${user.name} loaded")
     } catch (e: HttpException) {
         // Catch http errors
-        println("exception${e.code}", e)
+        println("exception${e.code()}", e)
     } catch (e: Throwable) {
         // All other exceptions (non-http)
         println("Something broken", e)
@@ -72,7 +72,7 @@ fun main(args: Array<String>) = runBlocking {
         //Successful HTTP result
         is Result.Ok -> saveToDb(result.value)
         // Any HTTP error
-        is Result.Error -> log("HTTP error with code ${result.error.code}", result.error)
+        is Result.Error -> log("HTTP error with code ${result.error.code()}", result.error)
         // Exception while request invocation
         is Result.Exception -> log("Something broken", e)
     }
