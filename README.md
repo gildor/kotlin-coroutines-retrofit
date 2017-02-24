@@ -20,7 +20,6 @@ Maven:
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
   <version>0.2.0</version>
-  <type>pom</type>
 </dependency>
 ```
 
