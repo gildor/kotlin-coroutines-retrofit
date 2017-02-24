@@ -27,6 +27,28 @@ class CallAwaitTest {
     }
 
     @Test
+    fun asyncResponseOk() = testBlocking {
+        val result = MockedCall(DONE).awaitResponse()
+        assertEquals(DONE, result.body())
+    }
+
+    @Test
+    fun asyncResponseError() = testBlocking {
+        val result = MockedCall(error = HttpError(errorResponse(500))).awaitResponse()
+        assertEquals(500, result.code())
+    }
+
+    @Test
+    fun asyncResponseFailure() = testBlocking {
+        val exception = IllegalStateException()
+        try {
+            MockedCall(exception = exception).awaitResult()
+        } catch (e: Exception) {
+            assertSame(e, exception)
+        }
+    }
+
+    @Test
     fun asyncResultOk() = testBlocking {
         val result = MockedCall(DONE).awaitResult()
         when (result) {

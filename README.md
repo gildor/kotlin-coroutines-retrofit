@@ -26,7 +26,7 @@ Maven:
 
 
 ## How to use
-There is two suspending extensions:
+There are three suspending extensions:
 
 ### `.await()`
 
@@ -41,13 +41,39 @@ In case of HTTP error or invocation exception `await()` throws exception
 // You can use retrofit suspended extension inside any coroutine block
 fun main(args: Array<String>) = runBlocking {
     try {
-        // Wait (suspend) for response
+        // Wait (suspend) for result
         val user: User = api.getUser("username").await()
         // Now we can work with result object
         println("User ${user.name} loaded")
     } catch (e: HttpError) {
         // Catch http errors
         println("exception${e.code}", e)
+    } catch (e: Throwable) {
+        // All other exceptions (non-http)
+        println("Something broken", e)
+    }
+}
+```
+
+### `.awaitResponse()`
+
+Common await API that returns response or throw exception
+```kotlin
+fun Call<T>.awaitResponse(): Response<T>
+```
+
+In case of invocation exception `awaitResponse()` throws exception
+
+```kotlin
+// You can use retrofit suspended extension inside any coroutine block
+fun main(args: Array<String>) = runBlocking {
+    try {
+        // Wait (suspend) for response
+        val response: Response<User> = api.getUser("username").awaitResponse()
+        if (response.isSuccessful()) {
+          // Now we can work with response object
+          println("User ${response.body().name} loaded")
+        }
     } catch (e: Throwable) {
         // All other exceptions (non-http)
         println("Something broken", e)
