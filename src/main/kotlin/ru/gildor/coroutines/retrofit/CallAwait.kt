@@ -42,6 +42,29 @@ suspend fun <T> Call<T>.await(): T {
 /**
  * Suspend extension that allows suspend [Call] inside coroutine.
  *
+ * @return Response for request or throw exception
+ */
+suspend fun <T> Call<T>.awaitResponse(): Response<T> {
+    return suspendCancellableCoroutine { continuation ->
+        enqueue(object : Callback<T> {
+            override fun onResponse(call: Call<T>?, response: Response<T>) {
+                continuation.resume(response)
+            }
+
+            override fun onFailure(call: Call<T>, t: Throwable) {
+                //if (call.isCanceled) return
+                /** see comment above */
+                continuation.resumeWithException(t)
+            }
+        })
+
+        registerOnCompletion(continuation)
+    }
+}
+
+/**
+ * Suspend extension that allows suspend [Call] inside coroutine.
+ *
  * @return sealed class [Result] object that can be
  *         casted to [Result.Ok] (success) or [Result.Error] (HTTP error) and [Result.Exception] (other errors)
  */
