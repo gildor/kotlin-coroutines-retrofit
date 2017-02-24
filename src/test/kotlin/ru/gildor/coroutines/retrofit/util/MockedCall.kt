@@ -6,12 +6,12 @@ import okhttp3.Request
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
-import ru.gildor.coroutines.retrofit.HttpError
 
 class MockedCall(
         val ok: String? = null,
-        val error: HttpError? = null,
+        val error: HttpException? = null,
         val exception: Throwable? = null
 ) : Call<String> {
     var executed: Boolean = false
@@ -21,7 +21,7 @@ class MockedCall(
         markAsExecuted()
         return when {
             ok != null -> Response.success(ok)
-            error != null -> errorResponse(error.code)
+            error != null -> errorResponse(error.code())
             exception != null -> throw exception
             else -> throw IllegalStateException("Wrong MockedCall state")
         }
@@ -31,7 +31,7 @@ class MockedCall(
         markAsExecuted()
         when {
             ok != null -> callback.onResponse(this, Response.success(ok))
-            error != null -> callback.onResponse(this, errorResponse(error.code))
+            error != null -> callback.onResponse(this, errorResponse(error.code()))
             exception != null -> callback.onFailure(this, exception)
         }
     }

@@ -5,6 +5,7 @@ import kotlinx.coroutines.experimental.Unconfined
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
+import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
 
@@ -16,9 +17,9 @@ class CallAwaitTest {
         assertEquals(DONE, MockedCall(DONE).await())
     }
 
-    @Test(expected = HttpError::class)
-    fun asyncHttpError() = testBlocking {
-        MockedCall(error = HttpError(errorResponse())).await()
+    @Test(expected = HttpException::class)
+    fun asyncHttpException() = testBlocking {
+        MockedCall(error = HttpException(errorResponse())).await()
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -65,8 +66,8 @@ class CallAwaitTest {
     @Test
     fun resultErrorTypes() = testBlocking {
         val errorResponse = errorResponse(500)
-        val httpError = HttpError(errorResponse)
-        val errorResult = MockedCall(error = httpError).awaitResult()
+        val httpException = HttpException(errorResponse)
+        val errorResult = MockedCall(error = httpException).awaitResult()
 
         if (errorResult is ResponseResult) {
             assertEquals(500, errorResult.response.code())
@@ -75,7 +76,7 @@ class CallAwaitTest {
         }
 
         if (errorResult is ErrorResult) {
-            assertEquals(httpError.toString(), errorResult.exception.toString())
+            assertEquals(httpException.toString(), errorResult.exception.toString())
         } else {
             fail()
         }
@@ -96,13 +97,13 @@ class CallAwaitTest {
 
     @Test
     fun asyncResultError() = testBlocking {
-        val error = HttpError(errorResponse(500))
+        val error = HttpException(errorResponse(500))
         val result = MockedCall(error = error).awaitResult()
         when (result) {
             is Result.Error -> {
-                assertEquals(error.code, result.exception.code)
+                assertEquals(error.code(), result.exception.code())
                 assertEquals(error.message, result.exception.message)
-                assertEquals("Error response 500", result.exception.errorBody.string())
+                assertEquals("Error response 500", result.exception.response().errorBody().string())
                 assertEquals(500, result.response.code())
             }
             is Result.Ok, is Result.Exception -> fail()

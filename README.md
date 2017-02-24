@@ -45,7 +45,7 @@ fun main(args: Array<String>) = runBlocking {
         val user: User = api.getUser("username").await()
         // Now we can work with result object
         println("User ${user.name} loaded")
-    } catch (e: HttpError) {
+    } catch (e: HttpException) {
         // Catch http errors
         println("exception${e.code}", e)
     } catch (e: Throwable) {
@@ -91,7 +91,7 @@ fun main(args: Array<String>) = runBlocking {
     //Return result or default value
     result.getOrDefault(User("empty-user"))
     
-    //Return value or throw exception (HttpError or original exception)
+    //Return value or throw exception (HttpException or original exception)
     result.getOrThrow()
     //Also supports custom exceptions to override original ones
     result.getOrThrow(IlleagalStateException("User request failed"))
