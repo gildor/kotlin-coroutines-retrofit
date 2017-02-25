@@ -35,7 +35,7 @@ class CallAwaitTest {
 
     @Test
     fun asyncResponseError() = testBlocking {
-        val result = MockedCall(error = HttpError(errorResponse(500))).awaitResponse()
+        val result = MockedCall(error = HttpException(errorResponse(500))).awaitResponse()
         assertEquals(500, result.code())
     }
 
