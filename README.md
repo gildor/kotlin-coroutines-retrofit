@@ -10,7 +10,7 @@ Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#f
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.2.0'
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.3.0'
 ```
 
 Maven:
@@ -19,7 +19,7 @@ Maven:
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
 </dependency>
 ```
 
@@ -85,7 +85,7 @@ fun main(args: Array<String>) = runBlocking {
 API based on sealed class `Result`:
 
 ```kotlin
-fun Call<T>.await(): Result<T>
+fun Call<T>.awaitResult(): Result<T>
 ```
 
 ```kotlin
