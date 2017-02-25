@@ -123,7 +123,7 @@ fun main(args: Array<String>) = runBlocking {
 }
 ```
 
-All `Result` classes also implemented one or both interfaces: `ResultResponse` and `ResultError`
+All `Result` classes also implemented one or both interfaces: `ResponseResult` and `ErrorResult`
 You can use them for access to shared properties of different classes from `Result`
  
 ```kotlin
