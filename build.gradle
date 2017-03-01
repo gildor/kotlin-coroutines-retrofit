@@ -1,11 +1,10 @@
 group 'ru.gildor.coroutines'
-version '0.3.0'
+version '0.4.0'
 
 buildscript {
-    ext.kotlin_version = '1.1.0-rc-91'
-    ext.kotlin_coroutines_version = '0.11-rc'
+    ext.kotlin_version = '1.1.0'
+    ext.kotlin_coroutines_version = '0.12'
     repositories {
-        maven { url "https://dl.bintray.com/kotlin/kotlin-eap-1.1" }
         jcenter()
     }
     dependencies {
@@ -15,8 +14,8 @@ buildscript {
 }
 
 repositories {
-    maven { url "https://dl.bintray.com/kotlin/kotlin-eap-1.1" }
     jcenter()
+    maven { url "https://dl.bintray.com/kotlin/kotlin-eap-1.1" }
 }
 
 apply plugin: 'kotlin'

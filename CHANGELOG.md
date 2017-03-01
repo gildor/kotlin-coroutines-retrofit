@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 0.4.0 (2017-03-01)
+
+- Kotlin 1.1
+- [kotlinx.coroutines 0.12](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.12)
+
 ## Version 0.3.0 (2017-02-25)
 
 - [Retrofit 2.2.0](https://github.com/square/retrofit/blob/parent-2.2.0/CHANGELOG.md#version-220-2017-02-21). Also it is minimum supported version
