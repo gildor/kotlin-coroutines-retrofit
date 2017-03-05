@@ -1,5 +1,5 @@
 group 'ru.gildor.coroutines'
-version '0.4.0'
+version '0.4.1'
 
 buildscript {
     ext.kotlin_version = '1.1.0'

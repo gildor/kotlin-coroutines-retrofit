@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.4.1 (2017-03-05)
+
+- [#8](https://github.com/gildor/kotlin-coroutines-retrofit/issues/8) (PR [#9](https://github.com/gildor/kotlin-coroutines-retrofit/pull/9)) Call cancellation feedback causes crash when coroutine is cancelled
+
 ## Version 0.4.0 (2017-03-01)
 
 - Kotlin 1.1
