@@ -24,13 +24,8 @@ suspend fun <T> Call<T>.await(): T {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                //if (call.isCanceled) return
-                /**
-                 * It is better just to invoke resumeWithException:
-                 * 1. If the coroutine was cancelled, then resumeWithException is just ignored
-                 * 2. However, if somebody just invokes Call.cancel(), then we should resume
-                 *    continuation that was doing `await` on this call, or it'll await forever.
-                 */
+                // Don't bother with resuming the continuation if it is already cancelled.
+                if (continuation.isCancelled) return
                 continuation.resumeWithException(t)
             }
         })
@@ -52,8 +47,8 @@ suspend fun <T> Call<T>.awaitResponse(): Response<T> {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                //if (call.isCanceled) return
-                /** see comment above */
+                // Don't bother with resuming the continuation if it is already cancelled.
+                if (continuation.isCancelled) return
                 continuation.resumeWithException(t)
             }
         })
@@ -82,8 +77,8 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
-                //if (call.isCanceled) return
-                /** see comment above */
+                // Don't bother with resuming the continuation if it is already cancelled.
+                if (continuation.isCancelled) return
                 continuation.resume(Result.Exception(t))
             }
         })
