@@ -61,5 +61,6 @@ fun errorResponse(code: Int = 400, message: String = "Error response $code"): Re
 fun okHttpResponse(code: Int = 200): okhttp3.Response = okhttp3.Response.Builder()
         .code(code)
         .protocol(Protocol.HTTP_1_1)
+        .message("mock response")
         .request(Request.Builder().url("http://localhost").build())
         .build()
