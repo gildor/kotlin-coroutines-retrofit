@@ -125,7 +125,7 @@ class CallAwaitTest {
             is Result.Error -> {
                 assertEquals(error.code(), result.exception.code())
                 assertEquals(error.message, result.exception.message)
-                assertEquals("Error response 500", result.exception.response().errorBody().string())
+                assertEquals("Error response 500", result.exception.response().errorBody()?.string())
                 assertEquals(500, result.response.code())
             }
             is Result.Ok, is Result.Exception -> fail()

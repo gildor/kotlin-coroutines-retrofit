@@ -17,7 +17,7 @@ suspend fun <T> Call<T>.await(): T {
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
                 if (response.isSuccessful) {
-                    continuation.resume(response.body())
+                    continuation.resume(response.body() as T)
                 } else {
                     continuation.resumeWithException(HttpException(response))
                 }
@@ -69,7 +69,7 @@ suspend fun <T> Call<T>.awaitResult(): Result<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
                 continuation.resume(
                         if (response.isSuccessful) {
-                            Result.Ok(response.body(), response.raw())
+                            Result.Ok(response.body() as T, response.raw())
                         } else {
                             Result.Error(HttpException(response), response.raw())
                         }
