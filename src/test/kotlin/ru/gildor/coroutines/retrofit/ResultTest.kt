@@ -11,7 +11,7 @@ class ResultTest {
     private val default = "default"
     private val ok = Result.Ok(result, okHttpResponse())
     private val error = Result.Error(HttpException(errorResponse<Nothing>()), okHttpResponse(401))
-    private val exception = Result.Exception(IllegalArgumentException())
+    private val exception = Result.Exception(IllegalArgumentException("Exception message"))
     @Test
     fun getOrNull() {
         assertEquals(result, ok.getOrNull())
@@ -44,5 +44,29 @@ class ResultTest {
     @Test(expected = IllegalStateException::class)
     fun getOrThrowCustomException() {
         exception.getOrThrow(IllegalStateException("Custom!"))
+    }
+
+    @Test
+    fun okToString() {
+        assertEquals(
+                "Result.Ok{value=result, response=Response{protocol=http/1.1, code=200, message=mock response, url=http://localhost/}}",
+                ok.toString()
+        )
+    }
+
+    @Test
+    fun errorToString() {
+        assertEquals(
+                "Result.Error{exception=retrofit2.HttpException: HTTP 400 Response.error()}",
+                error.toString()
+        )
+    }
+
+    @Test
+    fun exceptionToString() {
+        assertEquals(
+                "Result.Exception{java.lang.IllegalArgumentException: Exception message}",
+                exception.toString()
+        )
     }
 }

@@ -14,7 +14,11 @@ public sealed class Result<out T : Any> {
     public class Ok<out T : Any>(
             public val value: T,
             override val response: Response
-    ) : Result<T>(), ResponseResult
+    ) : Result<T>(), ResponseResult {
+        override fun toString(): String {
+            return "Result.Ok{value=$value, response=$response}"
+        }
+    }
 
     /**
      * HTTP error
@@ -22,7 +26,11 @@ public sealed class Result<out T : Any> {
     public class Error(
             override val exception: HttpException,
             override val response: Response
-    ) : Result<Nothing>(), ErrorResult, ResponseResult
+    ) : Result<Nothing>(), ErrorResult, ResponseResult {
+        override fun toString(): String {
+            return "Result.Error{exception=$exception}"
+        }
+    }
 
     /**
      * Network exception occurred talking to the server or when an unexpected
@@ -30,7 +38,11 @@ public sealed class Result<out T : Any> {
      */
     public class Exception(
             override val exception: Throwable
-    ) : Result<Nothing>(), ErrorResult
+    ) : Result<Nothing>(), ErrorResult {
+        override fun toString(): String {
+            return "Result.Exception{$exception}"
+        }
+    }
 
 }
 

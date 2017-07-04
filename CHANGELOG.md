@@ -4,9 +4,10 @@
 
 Notice: This release backward incompatible with previous versions:
 
-`.await()` and `.awaitResult()` can be used now only with non-nullable types of result 
+- `.await()` and `.awaitResult()` can be used now only with non-nullable types of result 
 and throw NullPointerException in case of null body. 
 See [examples in Readme](README.md#Nullable body)
+- [#13](https://github.com/gildor/kotlin-coroutines-retrofit/issues/13) `.toString()` for `Result` classes
 
 ## Version 0.5.1 (2017-06-27)
 
