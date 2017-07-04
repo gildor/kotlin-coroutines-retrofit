@@ -1,7 +1,6 @@
 package ru.gildor.coroutines.retrofit
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
+import org.junit.Assert.*
 import org.junit.Test
 import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.errorResponse
@@ -11,7 +10,7 @@ class ResultTest {
     private val result = "result"
     private val default = "default"
     private val ok = Result.Ok(result, okHttpResponse())
-    private val error = Result.Error(HttpException(errorResponse()), okHttpResponse(401))
+    private val error = Result.Error(HttpException(errorResponse<Nothing>()), okHttpResponse(401))
     private val exception = Result.Exception(IllegalArgumentException())
     @Test
     fun getOrNull() {

@@ -1,7 +1,16 @@
 # CHANGELOG
 
+## Version 0.6.0 (2017-07-04)
+
+Notice: This release backward incompatible with previous versions:
+
+`.await()` and `.awaitResult()` can be used now only with non-nullable types of result 
+and throw NullPointerException in case of null body. 
+See [examples in Readme](README.md#Nullable body)
+
 ## Version 0.5.1 (2017-06-27)
 
+- [Retrofit 2.3.0](https://github.com/square/retrofit/blob/parent-2.3.0/CHANGELOG.md#version-230-2017-05-13)
 - [kotlinx.coroutines 0.16](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.16)
 - Compiled against Kotlin 1.1.3
 
