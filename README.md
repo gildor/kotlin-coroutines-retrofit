@@ -147,8 +147,8 @@ fun main(args: Array<String>) = runBlocking {
 ## Nullable body
 
 To prevent unexpected behavior with nullable body of response `Call<Body?>`
-extensions `.await()` and `.awaitResult()` awailable only for 
-non nullable `Call<Body>` or platform `Call<Body!>` body types:
+extensions `.await()` and `.awaitResult()` available only for 
+non-nullable `Call<Body>` or platform `Call<Body!>` body types:
 
 ```kotlin
 fun main(args: Array<String>) = runBlocking {
