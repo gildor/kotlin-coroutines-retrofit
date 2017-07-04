@@ -4,13 +4,11 @@ plugins {
 }
 
 group 'ru.gildor.coroutines'
-version '0.5.1'
+version '0.6.0'
 
 repositories {
     jcenter()
 }
-
-apply plugin: 'kotlin'
 
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'

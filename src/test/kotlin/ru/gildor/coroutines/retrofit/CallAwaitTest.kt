@@ -7,6 +7,7 @@ import org.junit.Assert.*
 import org.junit.Test
 import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
+import ru.gildor.coroutines.retrofit.util.NullBodyCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
 
 private const val DONE = "Done!"
@@ -19,12 +20,17 @@ class CallAwaitTest {
 
     @Test(expected = HttpException::class)
     fun asyncHttpException() = testBlocking {
-        MockedCall(error = HttpException(errorResponse())).await()
+        MockedCall<String>(error = HttpException(errorResponse<String>())).await()
+    }
+
+    @Test(expected = NullPointerException::class)
+    fun asyncNullBody() = testBlocking {
+        NullBodyCall<String>().await()
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun asyncException() = testBlocking {
-        MockedCall(exception = IllegalArgumentException("wrong get param")).await()
+        MockedCall<String>(exception = IllegalArgumentException("wrong get param")).await()
     }
 
     @Test
@@ -35,15 +41,28 @@ class CallAwaitTest {
 
     @Test
     fun asyncResponseError() = testBlocking {
-        val result = MockedCall(error = HttpException(errorResponse(500))).awaitResponse()
+        val result = MockedCall<String>(error = HttpException(errorResponse<String>(500))).awaitResponse()
         assertEquals(500, result.code())
+    }
+
+    @Test
+    fun asyncResponseNullBody() = testBlocking {
+        val result = NullBodyCall<String>().awaitResponse()
+        assertNull(result.body())
+    }
+
+    @Test
+    fun asyncResponseNullableBody() = testBlocking {
+        //Check that we can call awaitResponse() on nullable body
+        val result = NullBodyCall<String?>().awaitResponse()
+        assertNull(result.body())
     }
 
     @Test
     fun asyncResponseFailure() = testBlocking {
         val exception = IllegalStateException()
         try {
-            MockedCall(exception = exception).awaitResult()
+            MockedCall<String>(exception = exception).awaitResult()
         } catch (e: Exception) {
             assertSame(e, exception)
         }
@@ -60,6 +79,18 @@ class CallAwaitTest {
             is Result.Error, is Result.Exception -> fail()
             else -> fail()
         }
+    }
+
+    @Test
+    fun asyncResultNullBody() = testBlocking {
+        val result = NullBodyCall<String>().awaitResult()
+        assertNull(result.getOrNull())
+    }
+
+    @Test(expected = NullPointerException::class)
+    fun asyncResultNullPointerForNullBody() = testBlocking {
+        val result = NullBodyCall<String>().awaitResult()
+        assertNull(result.getOrThrow())
     }
 
     @Test
@@ -87,9 +118,9 @@ class CallAwaitTest {
 
     @Test
     fun resultErrorTypes() = testBlocking {
-        val errorResponse = errorResponse(500)
+        val errorResponse = errorResponse<String>(500)
         val httpException = HttpException(errorResponse)
-        val errorResult = MockedCall(error = httpException).awaitResult()
+        val errorResult = MockedCall<String>(error = httpException).awaitResult()
 
         if (errorResult is ResponseResult) {
             assertEquals(500, errorResult.response.code())
@@ -107,7 +138,7 @@ class CallAwaitTest {
     @Test
     fun resultExceptionTypes() = testBlocking {
         val exception = IllegalStateException()
-        val errorResult = MockedCall(exception = exception).awaitResult()
+        val errorResult = MockedCall<String>(exception = exception).awaitResult()
 
         if (errorResult is ErrorResult) {
             assertEquals(exception, errorResult.exception)
@@ -119,8 +150,8 @@ class CallAwaitTest {
 
     @Test
     fun asyncResultError() = testBlocking {
-        val error = HttpException(errorResponse(500))
-        val result = MockedCall(error = error).awaitResult()
+        val error = HttpException(errorResponse<String>(500))
+        val result = MockedCall<String>(error = error).awaitResult()
         when (result) {
             is Result.Error -> {
                 assertEquals(error.code(), result.exception.code())
@@ -136,7 +167,7 @@ class CallAwaitTest {
     @Test
     fun asyncResultException() = testBlocking {
         val exception = IllegalArgumentException("wrong argument")
-        val result = MockedCall(exception = exception).awaitResult()
+        val result = MockedCall<String>(exception = exception).awaitResult()
         when (result) {
             is Result.Exception -> {
                 assertEquals(exception::class.java, result.exception::class.java)

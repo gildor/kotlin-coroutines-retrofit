@@ -10,7 +10,7 @@ Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#f
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.5.1'
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.6.0'
 ```
 
 Maven:
@@ -19,7 +19,7 @@ Maven:
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
-  <version>0.5.1</version>
+  <version>0.6.0</version>
 </dependency>
 ```
 
@@ -143,3 +143,35 @@ fun main(args: Array<String>) = runBlocking {
   }
 }
 ```
+
+## Nullable body
+
+To prevent unexpected behavior with nullable body of response `Call<Body?>`
+extensions `.await()` and `.awaitResult()` awailable only for 
+non nullable `Call<Body>` or platform `Call<Body!>` body types:
+
+```kotlin
+fun main(args: Array<String>) = runBlocking {
+  val user: Call<User> = api.getUser("username")
+  val userOrNull: Call<User?> = api.getUserOrNull("username")
+  
+  // Doesn't work, because User is nullable
+  // userOrNull.await()
+    
+  // Works for non-nullable type
+  try {
+      val result: User = user.await()  
+  } catch (e: NullPointerException) {
+      // If body will be null you will get NullPointerException
+  }
+  
+  // You can use .awaitResult() to catch possible problems with nullable body
+  val nullableResult = api.getUser("username").awaitResult().getOrNull()
+  // But type of body should be non-nullable
+  // api.getUserOrNull("username").awaitResult()
+  
+  // If you still want to use nullable body to clarify your api
+  // use awaitResponse() instead:
+  val responseBody: User? = userOrNull.awaitResponse().body()
+}
+``` 

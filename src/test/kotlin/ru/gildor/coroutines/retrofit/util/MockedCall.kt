@@ -9,15 +9,15 @@ import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
 
-class MockedCall(
-        val ok: String? = null,
+class MockedCall<T>(
+        val ok: T? = null,
         val error: HttpException? = null,
         val exception: Throwable? = null
-) : Call<String> {
-    var executed: Boolean = false
-    var cancelled: Boolean = false
+) : Call<T> {
+    private var executed: Boolean = false
+    private var cancelled: Boolean = false
 
-    override fun execute(): Response<String> {
+    override fun execute(): Response<T> {
         markAsExecuted()
         return when {
             ok != null -> Response.success(ok)
@@ -27,7 +27,7 @@ class MockedCall(
         }
     }
 
-    override fun enqueue(callback: Callback<String>) {
+    override fun enqueue(callback: Callback<T>) {
         markAsExecuted()
         when {
             ok != null -> callback.onResponse(this, Response.success(ok))
@@ -40,7 +40,7 @@ class MockedCall(
 
     override fun isExecuted() = executed
 
-    override fun clone(): Call<String> = throw IllegalStateException("Not mocked")
+    override fun clone(): Call<T> = throw IllegalStateException("Not mocked")
 
     override fun request(): Request = throw IllegalStateException("Not mocked")
 
@@ -55,7 +55,7 @@ class MockedCall(
 
 }
 
-fun errorResponse(code: Int = 400, message: String = "Error response $code"): Response<String> =
+fun <T> errorResponse(code: Int = 400, message: String = "Error response $code"): Response<T> =
         Response.error(code, ResponseBody.create(MediaType.parse("text/plain"), message))
 
 fun okHttpResponse(code: Int = 200): okhttp3.Response = okhttp3.Response.Builder()

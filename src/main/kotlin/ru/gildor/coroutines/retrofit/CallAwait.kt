@@ -12,12 +12,19 @@ import retrofit2.Response
  *
  * @return Result of request or throw exception
  */
-suspend fun <T> Call<T>.await(): T {
+public suspend fun <T : Any> Call<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
-            override fun onResponse(call: Call<T>?, response: Response<T>) {
+            override fun onResponse(call: Call<T>?, response: Response<T?>) {
                 if (response.isSuccessful) {
-                    continuation.resume(response.body() as T)
+                    val body = response.body()
+                    if (body == null) {
+                        continuation.resumeWithException(
+                                NullPointerException("Response body is null")
+                        )
+                    } else {
+                        continuation.resume(body)
+                    }
                 } else {
                     continuation.resumeWithException(HttpException(response))
                 }
@@ -39,7 +46,7 @@ suspend fun <T> Call<T>.await(): T {
  *
  * @return Response for request or throw exception
  */
-suspend fun <T> Call<T>.awaitResponse(): Response<T> {
+public suspend fun <T : Any?> Call<T>.awaitResponse(): Response<T> {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
@@ -63,13 +70,18 @@ suspend fun <T> Call<T>.awaitResponse(): Response<T> {
  * @return sealed class [Result] object that can be
  *         casted to [Result.Ok] (success) or [Result.Error] (HTTP error) and [Result.Exception] (other errors)
  */
-suspend fun <T> Call<T>.awaitResult(): Result<T> {
+public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
                 continuation.resume(
                         if (response.isSuccessful) {
-                            Result.Ok(response.body() as T, response.raw())
+                            val body = response.body()
+                            if (body == null) {
+                                Result.Exception(NullPointerException("Response body is null"))
+                            } else {
+                                Result.Ok(body, response.raw())
+                            }
                         } else {
                             Result.Error(HttpException(response), response.raw())
                         }
@@ -97,4 +109,3 @@ private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*
             }
     }
 }
-
