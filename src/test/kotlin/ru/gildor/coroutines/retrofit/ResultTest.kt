@@ -1,6 +1,7 @@
 package ru.gildor.coroutines.retrofit
 
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.errorResponse
@@ -42,7 +43,12 @@ class ResultTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun getOrThrowCustomException() {
+    fun getOrThrowErrorWithCustomException() {
+        error.getOrThrow(IllegalStateException("Custom!"))
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun getOrThrowExceptionCustomException() {
         exception.getOrThrow(IllegalStateException("Custom!"))
     }
 

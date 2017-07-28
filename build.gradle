@@ -3,6 +3,8 @@ plugins {
     id "com.jfrog.bintray" version "1.7.3" apply false
 }
 
+apply plugin: "jacoco"
+
 group 'ru.gildor.coroutines'
 version '0.7.1'
 
@@ -30,5 +32,7 @@ kotlin {
         coroutines "enable"
     }
 }
+
+tasks["check"].finalizedBy("jacocoTestReport")
 
 apply from: "publish.gradle"

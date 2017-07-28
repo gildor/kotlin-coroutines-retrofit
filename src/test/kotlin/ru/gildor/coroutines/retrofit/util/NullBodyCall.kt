@@ -29,8 +29,7 @@ class NullBodyCall<T : Any?> : Call<T> {
     private var cancelled: Boolean = false
 
     override fun execute(): Response<T> {
-        markAsExecuted()
-        return Response.success(null)
+        throw IllegalStateException("Not mocked")
     }
 
     override fun enqueue(callback: Callback<T>) {

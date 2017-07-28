@@ -2,6 +2,7 @@ package ru.gildor.coroutines.retrofit
 
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -43,6 +44,48 @@ class CallAwaitTest {
     fun asyncResponseError() = testBlocking {
         val result = MockedCall<String>(error = HttpException(errorResponse<String>(500))).awaitResponse()
         assertEquals(500, result.code())
+    }
+
+    @Test
+    fun requestCancel() = testBlocking {
+        val request = MockedCall(DONE, autoStart = false)
+        val async = async(coroutineContext) { request.awaitResponse() }
+        assertFalse(request.isCanceled)
+        async.cancel()
+        assertTrue(request.isCanceled)
+    }
+
+    @Test
+    fun requestCancelWithException() = testBlocking {
+        val request = MockedCall(DONE, autoStart = false, cancelException = IllegalStateException())
+        val async = async(coroutineContext) { request.awaitResponse() }
+        //We shouldn't crash on cancel exception
+        try {
+            assertFalse(request.isCanceled)
+            async.cancel()
+            assertTrue(request.isCanceled)
+        } catch (e: Exception) {
+            fail()
+        }
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun asyncResponseException() = testBlocking {
+        MockedCall<String>(exception = IllegalArgumentException()).awaitResponse()
+    }
+
+    @Test
+    fun asyncResponseCancel() = testBlocking {
+        val request = MockedCall<String>(
+                exception = IllegalArgumentException(),
+                autoStart = false
+        )
+        val result = async(coroutineContext) {
+            request.awaitResponse()
+        }
+        result.cancel()
+        request.start()
+        assertTrue(result.isCancelled)
     }
 
     @Test
@@ -177,7 +220,6 @@ class CallAwaitTest {
             else -> fail()
         }
     }
-
 }
 
 private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {

@@ -70,6 +70,7 @@ bintray {
     user = project.properties['bintray.user']
     key = project.properties['bintray.key']
     publications = ['Publication']
+    publish = true
     pkg {
         repo = project.properties['bintray.repo'] ?: 'maven'
         name = project.name
@@ -84,6 +85,12 @@ bintray {
         version {
             name = project.version
             vcsTag = releaseTag
+            mavenCentralSync {
+                sync = project.properties['sonatype.user'] != null
+                name = project.properties['sonatype.user']
+                password = project.properties['sonatype.password']
+                close = true
+            }
         }
     }
 }
