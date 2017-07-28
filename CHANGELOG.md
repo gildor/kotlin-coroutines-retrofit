@@ -1,10 +1,15 @@
 # CHANGELOG
 
-## Version 0.7.0 (2017-07-24)
+## Version 0.7.1 (2017-07-28)
+
+The previous version was accidentally released with kotlinx.coroutines 0.16 instead 0.17
+Thanks to @rciurkot for PR #25 that fixes that. 
 
 - [kotlinx.coroutines 0.17](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.17)
-- Compiled against Kotlin 1.1.3-2
 
+## Version 0.7.0 (2017-07-24)
+
+- Compiled against Kotlin 1.1.3-2
 
 ## Version 0.6.0 (2017-07-04)
 
