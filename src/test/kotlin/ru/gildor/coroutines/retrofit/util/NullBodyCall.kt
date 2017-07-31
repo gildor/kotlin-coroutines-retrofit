@@ -33,6 +33,7 @@ class NullBodyCall<T : Any?> : Call<T> {
     }
 
     override fun enqueue(callback: Callback<T>) {
+        markAsExecuted()
         callback.onResponse(this, Response.success(null))
     }
 

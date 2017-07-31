@@ -20,7 +20,7 @@ public suspend fun <T : Any> Call<T>.await(): T {
                     val body = response.body()
                     if (body == null) {
                         continuation.resumeWithException(
-                                NullPointerException("Response body is null")
+                                NullPointerException("Response body is null: $response")
                         )
                     } else {
                         continuation.resume(body)

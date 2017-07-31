@@ -18,7 +18,6 @@ class MockedCall<T>(
 ) : Call<T> {
     private var executed: Boolean = false
     private var cancelled: Boolean = false
-    private var started: Boolean = false
     private lateinit var callback: Callback<T>
 
     override fun execute(): Response<T> {
@@ -33,13 +32,12 @@ class MockedCall<T>(
     }
 
     fun start() {
-        markAsStarted()
+        markAsExecuted()
         when {
             ok != null -> callback.onResponse(this, Response.success(ok))
             error != null -> callback.onResponse(this, errorResponse(error.code()))
             exception != null -> callback.onFailure(this, exception)
         }
-        markAsExecuted()
     }
 
     override fun isCanceled() = cancelled
@@ -49,11 +47,6 @@ class MockedCall<T>(
     override fun clone(): Call<T> = throw IllegalStateException("Not mocked")
 
     override fun request(): Request = throw IllegalStateException("Not mocked")
-
-    private fun markAsStarted() {
-        if (started) throw IllegalStateException("Request already started")
-        started = true
-    }
 
     private fun markAsExecuted() {
         if (executed) throw IllegalStateException("Request already executed")

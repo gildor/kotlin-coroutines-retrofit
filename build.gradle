@@ -38,6 +38,6 @@ jacocoTestReport {
     }
 }
 
-tasks["check"].finalizedBy("jacocoTestReport")
+tasks["test"].finalizedBy("jacocoTestReport")
 
 apply from: "publish.gradle"
