@@ -32,6 +32,12 @@ kotlin {
     }
 }
 
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+    }
+}
+
 tasks["check"].finalizedBy("jacocoTestReport")
 
 apply from: "publish.gradle"
