@@ -1,4 +1,8 @@
 # Kotlin Coroutines for Retrofit
+[![CircleCI](https://circleci.com/gh/gildor/kotlin-coroutines-retrofit.svg?style=shield)](https://circleci.com/gh/gildor/kotlin-coroutines-retrofit)
+[![codecov](https://codecov.io/gh/gildor/kotlin-coroutines-retrofit/branch/master/graph/badge.svg)](https://codecov.io/gh/gildor/kotlin-coroutines-retrofit)
+[![codebeat badge](https://codebeat.co/badges/6dafc2e2-e136-4cc7-a932-859e2f00d224)](https://codebeat.co/a/gildor/projects/github-com-bandlab-bandlab-android-develop)
+
 
 This is small library that provides  [Kotlin Coroutines](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md) [suspending](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md#suspending-functions) extension `Call.await()` for [Retrofit 2](https://github.com/square/retrofit)
 
