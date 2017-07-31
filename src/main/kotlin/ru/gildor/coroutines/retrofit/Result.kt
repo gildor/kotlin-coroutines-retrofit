@@ -15,9 +15,7 @@ public sealed class Result<out T : Any> {
             public val value: T,
             override val response: Response
     ) : Result<T>(), ResponseResult {
-        override fun toString(): String {
-            return "Result.Ok{value=$value, response=$response}"
-        }
+        override fun toString() = "Result.Ok{value=$value, response=$response}"
     }
 
     /**
@@ -27,9 +25,7 @@ public sealed class Result<out T : Any> {
             override val exception: HttpException,
             override val response: Response
     ) : Result<Nothing>(), ErrorResult, ResponseResult {
-        override fun toString(): String {
-            return "Result.Error{exception=$exception}"
-        }
+        override fun toString() = "Result.Error{exception=$exception}"
     }
 
     /**
@@ -39,9 +35,7 @@ public sealed class Result<out T : Any> {
     public class Exception(
             override val exception: Throwable
     ) : Result<Nothing>(), ErrorResult {
-        override fun toString(): String {
-            return "Result.Exception{$exception}"
-        }
+        override fun toString() = "Result.Exception{$exception}"
     }
 
 }
@@ -63,13 +57,13 @@ public interface ErrorResult {
 /**
  * Returns [Result.Ok.value] or `null`
  */
-public fun <T : Any> Result<T>.getOrNull() =
+public fun <T : Any> Result<T>.getOrNull(): T? =
         if (this is Result.Ok) this.value else null
 
 /**
  * Returns [Result.Ok.value] or [default]
  */
-public fun <T : Any> Result<T>.getOrDefault(default: T) =
+public fun <T : Any> Result<T>.getOrDefault(default: T): T =
         getOrNull() ?: default
 
 /**

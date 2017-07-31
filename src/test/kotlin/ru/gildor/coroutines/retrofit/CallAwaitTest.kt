@@ -6,6 +6,7 @@ import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
+import retrofit2.Call
 import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.NullBodyCall
@@ -47,26 +48,33 @@ class CallAwaitTest {
     }
 
     @Test
-    fun requestCancel() = testBlocking {
-        val request = MockedCall(DONE, autoStart = false)
-        val async = async(coroutineContext) { request.awaitResponse() }
-        assertFalse(request.isCanceled)
-        async.cancel()
-        assertTrue(request.isCanceled)
+    fun awaitRequestCancel() = testBlocking {
+        checkJobCancel { it.await() }
+    }
+
+    @Test
+    fun awaitResponseRequestCancel() = testBlocking {
+        checkJobCancel { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitResultRequestCancel() = testBlocking {
+        checkJobCancel { it.awaitResult() }
     }
 
     @Test
     fun requestCancelWithException() = testBlocking {
-        val request = MockedCall(DONE, autoStart = false, cancelException = IllegalStateException())
-        val async = async(coroutineContext) { request.awaitResponse() }
-        //We shouldn't crash on cancel exception
-        try {
-            assertFalse(request.isCanceled)
-            async.cancel()
-            assertTrue(request.isCanceled)
-        } catch (e: Exception) {
-            fail()
-        }
+        checkRequestCancelWithException { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitRequestCancelWithException() = testBlocking {
+        checkRequestCancelWithException { it.await() }
+    }
+
+    @Test
+    fun awaitResultCancelWithException() = testBlocking {
+        checkRequestCancelWithException { it.awaitResult() }
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -75,17 +83,18 @@ class CallAwaitTest {
     }
 
     @Test
-    fun asyncResponseCancel() = testBlocking {
-        val request = MockedCall<String>(
-                exception = IllegalArgumentException(),
-                autoStart = false
-        )
-        val result = async(coroutineContext) {
-            request.awaitResponse()
-        }
-        result.cancel()
-        request.start()
-        assertTrue(result.isCancelled)
+    fun awaitJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.await() }
+    }
+
+    @Test
+    fun awaitResponseJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitResultJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.awaitResult() }
     }
 
     @Test
@@ -219,6 +228,48 @@ class CallAwaitTest {
             is Result.Ok, is Result.Error -> fail()
             else -> fail()
         }
+    }
+
+    private fun <T> checkRequestCancelWithException(
+            block: suspend (Call<String>) -> T
+    ) = testBlocking {
+        val request = MockedCall(
+                ok = DONE,
+                autoStart = false,
+                cancelException = IllegalStateException()
+        )
+        val async = async(coroutineContext, block = { block(request) })
+        //We shouldn't crash on cancel exception
+        try {
+            assertFalse(request.isCanceled)
+            async.cancel()
+            assertTrue(request.isCanceled)
+        } catch (e: Exception) {
+            fail()
+        }
+    }
+
+    private fun <T> checkJobCancelWithException(block: suspend (Call<String>) -> T) = testBlocking {
+        val request = MockedCall<String>(
+                exception = IllegalArgumentException(),
+                autoStart = false
+        )
+        val result = async(coroutineContext) {
+            block(request)
+        }
+        result.cancel()
+        request.start()
+        assertTrue(result.isCancelled)
+    }
+
+    private fun <T> checkJobCancel(
+            block: suspend (Call<String>) -> T
+    ) = testBlocking {
+        val request = MockedCall(DONE, autoStart = false)
+        val async = async(coroutineContext) { block(request) }
+        assertFalse(request.isCanceled)
+        async.cancel()
+        assertTrue(request.isCanceled)
     }
 }
 

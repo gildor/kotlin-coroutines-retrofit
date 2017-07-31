@@ -56,7 +56,7 @@ fun main(args: Array<String>) = runBlocking {
 
 ### `.awaitResponse()`
 
-Common await API that returns response or throw exception
+Common await API that returns [Response](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Response.html) or throw exception
 ```kotlin
 fun Call<T>.awaitResponse(): Response<T>
 ```
@@ -82,7 +82,7 @@ fun main(args: Array<String>) = runBlocking {
 
 ### `.awaitResult()`
 
-API based on sealed class `Result`:
+API based on sealed class [Result](src/main/kotlin/ru/gildor/coroutines/retrofit/Result.kt):
 
 ```kotlin
 fun Call<T>.awaitResult(): Result<T>
@@ -175,3 +175,35 @@ fun main(args: Array<String>) = runBlocking {
   val responseBody: User? = userOrNull.awaitResponse().body()
 }
 ``` 
+
+## Parallel requests
+
+Sometimes you want to run a few requests in parallel and don't want to wait previous request to make next one.
+You can do that if wrap calls to `kotlinx.coroutines` [async()](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/async.html)
+
+
+```kotlin
+fun main(args: Array<String>) = runBlocking {
+  val users = listOf("user1", "user2", "user3")
+      .map { username ->
+        // Pass any coroutine context that fits better for your case
+        // Coroutine Dispatcher also controls parallelism level 
+        // for CommonPool parallelism is `availableProcessors - 1`
+        // But you can use any custom dispatcher with any parallelism strategy
+        async(CommonPool) {
+            // Send request. We use `awaitResult()` here to avoid try/catch, 
+            // but you can use `await()` and catch exceptions
+            api.getUser(username).awaitResult() 
+        }
+      }
+      // Handle results
+      // in this example we get result or null in case of error and filter all nulls
+      .mapNotNull {
+        // Wait (suspend) for result of `async()` and get result of request
+        // We must call first `await()` only when all `async` blocks are created for parallel requests
+        it.await().getOrNull()
+      }
+}
+``` 
+
+You can read more about concurrent usage of async in [kotlinx.coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#concurrent-using-async)
