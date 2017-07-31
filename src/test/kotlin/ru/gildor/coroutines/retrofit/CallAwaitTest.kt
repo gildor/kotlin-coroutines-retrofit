@@ -2,9 +2,11 @@ package ru.gildor.coroutines.retrofit
 
 import kotlinx.coroutines.experimental.CoroutineScope
 import kotlinx.coroutines.experimental.Unconfined
+import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
+import retrofit2.Call
 import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.NullBodyCall
@@ -43,6 +45,56 @@ class CallAwaitTest {
     fun asyncResponseError() = testBlocking {
         val result = MockedCall<String>(error = HttpException(errorResponse<String>(500))).awaitResponse()
         assertEquals(500, result.code())
+    }
+
+    @Test
+    fun awaitRequestCancel() = testBlocking {
+        checkJobCancel { it.await() }
+    }
+
+    @Test
+    fun awaitResponseRequestCancel() = testBlocking {
+        checkJobCancel { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitResultRequestCancel() = testBlocking {
+        checkJobCancel { it.awaitResult() }
+    }
+
+    @Test
+    fun requestCancelWithException() = testBlocking {
+        checkRequestCancelWithException { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitRequestCancelWithException() = testBlocking {
+        checkRequestCancelWithException { it.await() }
+    }
+
+    @Test
+    fun awaitResultCancelWithException() = testBlocking {
+        checkRequestCancelWithException { it.awaitResult() }
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun asyncResponseException() = testBlocking {
+        MockedCall<String>(exception = IllegalArgumentException()).awaitResponse()
+    }
+
+    @Test
+    fun awaitJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.await() }
+    }
+
+    @Test
+    fun awaitResponseJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.awaitResponse() }
+    }
+
+    @Test
+    fun awaitResultJobCancelWithException() = testBlocking {
+        checkJobCancelWithException { it.awaitResult() }
     }
 
     @Test
@@ -178,6 +230,47 @@ class CallAwaitTest {
         }
     }
 
+    private fun <T> checkRequestCancelWithException(
+            block: suspend (Call<String>) -> T
+    ) = testBlocking {
+        val request = MockedCall(
+                ok = DONE,
+                autoStart = false,
+                cancelException = IllegalStateException()
+        )
+        val async = async(coroutineContext, block = { block(request) })
+        //We shouldn't crash on cancel exception
+        try {
+            assertFalse(request.isCanceled)
+            async.cancel()
+            assertTrue(request.isCanceled)
+        } catch (e: Exception) {
+            fail()
+        }
+    }
+
+    private fun <T> checkJobCancelWithException(block: suspend (Call<String>) -> T) = testBlocking {
+        val request = MockedCall<String>(
+                exception = IllegalArgumentException(),
+                autoStart = false
+        )
+        val result = async(coroutineContext) {
+            block(request)
+        }
+        result.cancel()
+        request.start()
+        assertTrue(result.isCancelled)
+    }
+
+    private fun <T> checkJobCancel(
+            block: suspend (Call<String>) -> T
+    ) = testBlocking {
+        val request = MockedCall(DONE, autoStart = false)
+        val async = async(coroutineContext) { block(request) }
+        assertFalse(request.isCanceled)
+        async.cancel()
+        assertTrue(request.isCanceled)
+    }
 }
 
 private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {

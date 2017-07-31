@@ -10,30 +10,36 @@ import retrofit2.HttpException
 import retrofit2.Response
 
 class MockedCall<T>(
-        val ok: T? = null,
-        val error: HttpException? = null,
-        val exception: Throwable? = null
+        private val ok: T? = null,
+        private val error: HttpException? = null,
+        private val exception: Throwable? = null,
+        private val autoStart: Boolean = true,
+        private val cancelException: Throwable? = null
 ) : Call<T> {
     private var executed: Boolean = false
     private var cancelled: Boolean = false
+    private var started: Boolean = false
+    private lateinit var callback: Callback<T>
 
     override fun execute(): Response<T> {
-        markAsExecuted()
-        return when {
-            ok != null -> Response.success(ok)
-            error != null -> errorResponse(error.code())
-            exception != null -> throw exception
-            else -> throw IllegalStateException("Wrong MockedCall state")
-        }
+        throw IllegalStateException("Not mocked")
     }
 
     override fun enqueue(callback: Callback<T>) {
-        markAsExecuted()
+        this.callback = callback
+        if (autoStart) {
+            start()
+        }
+    }
+
+    fun start() {
+        markAsStarted()
         when {
             ok != null -> callback.onResponse(this, Response.success(ok))
             error != null -> callback.onResponse(this, errorResponse(error.code()))
             exception != null -> callback.onFailure(this, exception)
         }
+        markAsExecuted()
     }
 
     override fun isCanceled() = cancelled
@@ -44,6 +50,11 @@ class MockedCall<T>(
 
     override fun request(): Request = throw IllegalStateException("Not mocked")
 
+    private fun markAsStarted() {
+        if (started) throw IllegalStateException("Request already started")
+        started = true
+    }
+
     private fun markAsExecuted() {
         if (executed) throw IllegalStateException("Request already executed")
         executed = true
@@ -51,6 +62,9 @@ class MockedCall<T>(
 
     override fun cancel() {
         cancelled = true
+        if (cancelException != null) {
+            throw cancelException
+        }
     }
 
 }
