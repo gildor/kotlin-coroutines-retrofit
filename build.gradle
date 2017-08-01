@@ -14,28 +14,19 @@ repositories {
 targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
-sourceSets {
-    main.java.srcDirs += 'src/main/kotlin'
-    test.java.srcDirs += 'src/test/kotlin'
-}
-
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib:${plugins.findPlugin("kotlin").properties["kotlinPluginVersion"]}"
+    compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.17"
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     testCompile 'junit:junit:4.12'
 }
 
 kotlin {
-    experimental {
-        coroutines "enable"
-    }
+    experimental.coroutines = "enable"
 }
 
 jacocoTestReport {
-    reports {
-        xml.enabled = true
-    }
+    reports.xml.enabled = true
 }
 
 tasks["test"].finalizedBy("jacocoTestReport")
