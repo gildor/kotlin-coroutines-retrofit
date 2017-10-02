@@ -27,8 +27,15 @@ Maven:
 </dependency>
 ```
 
-
 ## How to use
+
+
+> NOTE: All examples in this Readme use [`runBlocking`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/run-blocking.html) to build coroutine but it useful only for testing or examples.
+>
+> For a real application you want probably use some other coroutines builder that don't block thread, for example [`launch`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/launch.html) from [kotlinx.coroutines](https://github.com/kotlin/kotlinx.coroutines).
+> 
+> If you want to use this library for UI please check also [Guide to UI programming with coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md)
+
 There are three suspending extensions:
 
 ### `.await()`
