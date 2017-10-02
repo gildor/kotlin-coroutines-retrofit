@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 0.8.0 (2017-10-02)
+## Version 0.8.1 (2017-10-02)
 
 - [kotlinx.coroutines 0.19](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.19)
 - Compiled against Kotlin 1.1.51

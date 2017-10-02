@@ -87,7 +87,7 @@ bintray {
             vcsTag = releaseTag
             mavenCentralSync {
                 sync = project.properties['sonatype.user'] != null
-                name = project.properties['sonatype.user']
+                user = project.properties['sonatype.user']
                 password = project.properties['sonatype.password']
                 close = true
             }
