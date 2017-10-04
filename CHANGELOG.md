@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Version 0.8.2 (2017-10-04)
+
+- Fixed Kotlin stdlib dependency version in pom.xml
+
 ## Version 0.8.1 (2017-10-02)
 
 - [kotlinx.coroutines 0.19](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.19)
