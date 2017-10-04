@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'ru.gildor.coroutines'
-version '0.8.1'
+version '0.8.2'
 
 repositories {
     jcenter()
@@ -15,7 +15,7 @@ targetCompatibility = '1.6'
 sourceCompatibility = '1.6'
 
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:${plugins.findPlugin("kotlin").properties["kotlinPluginVersion"]}"
     compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:0.19"
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     testCompile 'junit:junit:4.12'
