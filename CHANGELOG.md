@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Version 0.9.0 (2017-12-26)
+
+- [kotlinx.coroutines 0.20](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.20)
+- Compiled against Kotlin 1.2.10
+
 ## Version 0.8.2 (2017-10-04)
 
 - Fixed Kotlin stdlib dependency version in pom.xml
