@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## Version 0.10.0 (2017-04-26)
+
+- [Retrofit 2.4.0](https://github.com/square/retrofit/blob/parent-2.4.0/CHANGELOG.md#version-240-2018-03-14)
+- [kotlinx.coroutines 0.22.5](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.22.5)
+- Compiled against Kotlin 1.2.40
+- Migration of build.gradle to kotlin-dsl
+- Gradle 4.7
+- Published proper javadoc
+
 ## Version 0.9.0 (2017-12-26)
 
 - [kotlinx.coroutines 0.20](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.20)
