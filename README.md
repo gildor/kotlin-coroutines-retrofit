@@ -4,7 +4,7 @@
 [![codebeat badge](https://codebeat.co/badges/ccb15073-b84c-4f7d-a0fc-1bdba2b0e435)](https://codebeat.co/projects/github-com-gildor-kotlin-coroutines-retrofit-master)
 
 
-This is small library that provides  [Kotlin Coroutines](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md) [suspending](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md#suspending-functions) extension `Call.await()` for [Retrofit 2](https://github.com/square/retrofit)
+This is a small library that provides the [Kotlin Coroutines](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md) [suspending](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md#suspending-functions) extension `Call.await()` for [Retrofit 2](https://github.com/square/retrofit)
 
 Based on [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) implementation
 
@@ -30,22 +30,22 @@ Maven:
 ## How to use
 
 
-> NOTE: All examples in this Readme use [`runBlocking`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/run-blocking.html) to build coroutine but it useful only for testing or examples.
+> NOTE: All examples in this README use [`runBlocking`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/run-blocking.html) to build coroutine but it is only useful for testing or examples.
 >
-> For a real application you want probably use some other coroutines builder that don't block thread, for example [`launch`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/launch.html) from [kotlinx.coroutines](https://github.com/kotlin/kotlinx.coroutines).
+> For a real application you probably want to use some other coroutines builder that does not block a thread, for example [`launch`](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/launch.html) from [kotlinx.coroutines](https://github.com/kotlin/kotlinx.coroutines).
 > 
-> If you want to use this library for UI please check also [Guide to UI programming with coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md)
+> If you want to use this library for UI please also check the [Guide to UI programming with coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/ui/coroutines-guide-ui.md)
 
 There are three suspending extensions:
 
 ### `.await()`
 
-Common await API that returns result or throw exception
+Common await API that returns a result or throws an exception
 ```kotlin
 fun Call<T>.await(): T
 ```
 
-In case of HTTP error or invocation exception `await()` throws exception
+In case of an HTTP error or an invocation exception `await()` throws an exception
 
 ```kotlin
 // You can use retrofit suspended extension inside any coroutine block
@@ -67,12 +67,12 @@ fun main(args: Array<String>) = runBlocking {
 
 ### `.awaitResponse()`
 
-Common await API that returns [Response](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Response.html) or throw exception
+Common await API that returns a [Response](https://square.github.io/retrofit/2.x/retrofit/retrofit2/Response.html) or throws an exception
 ```kotlin
 fun Call<T>.awaitResponse(): Response<T>
 ```
 
-In case of invocation exception `awaitResponse()` throws exception
+In case of an invocation exception `awaitResponse()` throws an exception
 
 ```kotlin
 // You can use retrofit suspended extension inside any coroutine block
@@ -157,8 +157,8 @@ fun main(args: Array<String>) = runBlocking {
 
 ## Nullable body
 
-To prevent unexpected behavior with nullable body of response `Call<Body?>`
-extensions `.await()` and `.awaitResult()` available only for 
+To prevent unexpected behavior with a nullable body of response `Call<Body?>`
+extensions `.await()` and `.awaitResult()` are available only for 
 non-nullable `Call<Body>` or platform `Call<Body!>` body types:
 
 ```kotlin
@@ -189,8 +189,8 @@ fun main(args: Array<String>) = runBlocking {
 
 ## Parallel requests
 
-Sometimes you want to run a few requests in parallel and don't want to wait previous request to make next one.
-You can do that if wrap calls to `kotlinx.coroutines` [async()](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/async.html)
+Sometimes you want to run a few requests in parallel and don't want to wait for the previous request to make the next one.
+You can do that by wrapping calls with `kotlinx.coroutines` [async()](https://kotlin.github.io/kotlinx.coroutines/kotlinx-coroutines-core/kotlinx.coroutines.experimental/async.html)
 
 
 ```kotlin
@@ -217,4 +217,4 @@ fun main(args: Array<String>) = runBlocking {
 }
 ``` 
 
-You can read more about concurrent usage of async in [kotlinx.coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#concurrent-using-async)
+You can read more about concurrent usage of async in the [kotlinx.coroutines guide](https://github.com/Kotlin/kotlinx.coroutines/blob/master/coroutines-guide.md#concurrent-using-async)
