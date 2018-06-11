@@ -11,6 +11,7 @@ import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.NullBodyCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
+import kotlin.coroutines.experimental.coroutineContext
 
 private const val DONE = "Done!"
 
