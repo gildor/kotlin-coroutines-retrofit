@@ -1,9 +1,11 @@
 # CHANGELOG
 
-## Version 0.10.1 (2017-06-12)
+## Version 0.11.0 (2017-06-12)
 
 - [kotlinx.coroutines 0.23.1](https://github.com/Kotlin/kotlinx.coroutines/releases/)
 - Compiled against Kotlin 1.2.41
+
+Thanks to [Thomas Schmidt](https://github.com/bohsen) for contribution
 
 ## Version 0.10.0 (2017-04-26)
 
