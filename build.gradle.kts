@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "ru.gildor.coroutines"
-version = "0.10.0"
+version = "0.10.1"
 description = "Provides Kotlin Coroutines suspendable await() extensions for Retrofit Call"
 
 repositories {
