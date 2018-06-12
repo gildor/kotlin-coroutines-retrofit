@@ -100,7 +100,7 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
 }
 
 private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*>) {
-    continuation.invokeOnCompletion {
+    continuation.invokeOnCancellation {
         if (continuation.isCancelled)
             try {
                 cancel()
