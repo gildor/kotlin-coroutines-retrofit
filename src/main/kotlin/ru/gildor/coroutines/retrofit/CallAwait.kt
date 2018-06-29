@@ -101,11 +101,10 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
 
 private fun Call<*>.registerOnCompletion(continuation: CancellableContinuation<*>) {
     continuation.invokeOnCancellation {
-        if (continuation.isCancelled)
-            try {
-                cancel()
-            } catch (ex: Throwable) {
-                //Ignore cancel exception
-            }
+        try {
+            cancel()
+        } catch (ex: Throwable) {
+            //Ignore cancel exception
+        }
     }
 }
