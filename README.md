@@ -6,7 +6,11 @@
 
 This is a small library that provides the [Kotlin Coroutines](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md) [suspending](https://github.com/Kotlin/kotlin-coroutines/blob/master/kotlin-coroutines-informal.md#suspending-functions) extension `Call.await()` for [Retrofit 2](https://github.com/square/retrofit)
 
-Based on [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) implementation
+Based on [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) implementation.
+
+This branch uses Kotlin experimental package `kotlin.coroutines.experimental` (pre-1.3).
+
+Migration to package stable `kotlin.coroutines` package is planned and work in progress.
 
 ## Download
 Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#files/ru/gildor/coroutines/kotlin-coroutines-retrofit):
@@ -14,16 +18,16 @@ Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#f
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.11.0'
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0'
 ```
 
-Maven:
+Maven:getOrThrow
 
 ```xml
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
-  <version>0.11.0</version>
+  <version>0.12.0</version>
 </dependency>
 ```
 
@@ -49,7 +53,7 @@ In case of an HTTP error or an invocation exception `await()` throws an exceptio
 
 ```kotlin
 // You can use retrofit suspended extension inside any coroutine block
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
     try {
         // Wait (suspend) for result
         val user: User = api.getUser("username").await()
@@ -76,7 +80,7 @@ In case of an invocation exception `awaitResponse()` throws an exception
 
 ```kotlin
 // You can use retrofit suspended extension inside any coroutine block
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
     try {
         // Wait (suspend) for response
         val response: Response<User> = api.getUser("username").awaitResponse()
@@ -100,7 +104,7 @@ fun Call<T>.awaitResult(): Result<T>
 ```
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
     // Wait (suspend) for Result
     val result: Result<User> = api.getUser("username").awaitResult()
     // Check result type
@@ -118,7 +122,7 @@ fun main(args: Array<String>) = runBlocking {
 Also, `Result` has a few handy extension functions that allow to avoid `when` block matching:
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
     val result: User = api.getUser("username").awaitResult()
     
     //Return value for success or null for any http error or exception
@@ -138,7 +142,7 @@ All `Result` classes also implemented one or both interfaces: `ResponseResult` a
 You can use them for access to shared properties of different classes from `Result`
  
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
   val result: User = api.getUser("username").awaitResult()
   
   //Result.Ok and Result.Error both implement ResponseResult
@@ -162,7 +166,7 @@ extensions `.await()` and `.awaitResult()` are available only for
 non-nullable `Call<Body>` or platform `Call<Body!>` body types:
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
   val user: Call<User> = api.getUser("username")
   val userOrNull: Call<User?> = api.getUserOrNull("username")
   
@@ -194,7 +198,7 @@ You can do that by wrapping calls with `kotlinx.coroutines` [async()](https://ko
 
 
 ```kotlin
-fun main(args: Array<String>) = runBlocking {
+fun main(args: Array<String>): Unit = runBlocking {
   val users = listOf("user1", "user2", "user3")
       .map { username ->
         // Pass any coroutine context that fits better for your case
