@@ -8,12 +8,11 @@ This is a small library that provides the [Kotlin Coroutines](https://github.com
 
 Based on [kotlinx.coroutines](https://github.com/Kotlin/kotlinx.coroutines) implementation.
 
-This branch uses Kotlin experimental package `kotlin.coroutines.experimental` (pre-1.3).
-
-Migration to package stable `kotlin.coroutines` package is planned and work in progress.
-
 ## Download
+
 Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#files/ru/gildor/coroutines/kotlin-coroutines-retrofit):
+
+### If you use Kotlin 1.2: Version of the library based on experimental coroutines API
 
 Gradle:
 
@@ -28,6 +27,25 @@ Maven:getOrThrow
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
   <version>0.12.0</version>
+</dependency>
+```
+
+### If you use Kotlin 1.3 (including EAP): Version based on stable coroutines API
+
+
+Gradle:
+
+```groovy
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0-eap13'
+```
+
+Maven:getOrThrow
+
+```xml
+<dependency>
+  <groupId>ru.gildor.coroutines</groupId>
+  <artifactId>kotlin-coroutines-retrofit</artifactId>
+  <version>0.12.0-eap13</version>
 </dependency>
 ```
 
