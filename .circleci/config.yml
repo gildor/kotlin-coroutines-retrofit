@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/kotlin-coroutines-retrofit
+    shell: /bin/bash --login
+    docker:
+    - image: circleci/openjdk:8u171-jdk
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - kotlin-coroutines-retrofit
+    - run: ./gradlew clean build
+    - save_cache:
+        key: kotlin-coroutines-retrofit
+        paths: ~/.gradle
+    # Code coverage report
+    - run: bash <(curl -s https://codecov.io/bash)
+    - store_test_results:
+        path: build/test-results
+    - store_artifacts:
+        path: build/libs
