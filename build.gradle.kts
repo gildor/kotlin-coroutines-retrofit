@@ -131,12 +131,12 @@ publishing {
 }
 
 bintray {
-    user = project.properties["bintray.user"]?.toString()
-    key = project.properties["bintray.key"]?.toString()
+    user = project.buildProp("BINTRAY_USER")?.toString()
+    key = project.buildProp("BINTRAY_KEY")?.toString()
     setPublications("MavenJava")
     publish = true
     pkg(delegateClosureOf<PackageConfig> {
-        repo = project.properties["bintray.repo"]?.toString() ?: "maven"
+        repo = project.buildProp("BINTRAY_REPO")?.toString() ?: "maven"
         name = project.name
         desc = description
         githubRepo = githubId
@@ -150,13 +150,21 @@ bintray {
             name = project.version.toString()
             vcsTag = releaseTag
             mavenCentralSync(delegateClosureOf<MavenCentralSyncConfig> {
-                sync = project.properties["sonatype.user"] != null
-                user = project.properties["sonatype.user"]?.toString()
-                password = project.properties["sonatype.password"]?.toString()
+                sync = project.buildProp("SONATYPE_USER") != null
+                user = project.buildProp("SONATYPE_USER")?.toString()
+                password = project.buildProp("SONATYPE_PASSWORD")?.toString()
                 close = "true"
             })
         })
     })
+}
+
+
+fun Project.buildProp(name: String): Any? {
+    if (System.getenv().containsKey(name)) {
+        return System.getenv()[name]
+    }
+    return properties[name]
 }
 
 /**
@@ -166,9 +174,11 @@ class NodeScope(private val node: Node, block: NodeScope.() -> Unit) {
     init {
         block()
     }
+
     infix fun String.to(value: String) {
         node.appendNode(this, value)
     }
+
     operator fun String.invoke(block: NodeScope.() -> Unit) {
         node.appendNode(this).apply { NodeScope(this, block) }
     }
