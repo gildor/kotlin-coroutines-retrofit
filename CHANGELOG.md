@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## Version 0.12.0-eap13 (2017-08-04) - Stable coroutines
+
+First version of kotlin-coroutines-retrofit based on stable coroutines API from Kotlin 1.3
+Compiled against Kotlin 1.3-M1 and kotlinx.coroutines 0.24.0-eap13 (also based on stable API)
+ 
+
 ## Version 0.12.0 (2017-08-04)
 
 - [kotlinx.coroutines 0.24.0](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.24.0)

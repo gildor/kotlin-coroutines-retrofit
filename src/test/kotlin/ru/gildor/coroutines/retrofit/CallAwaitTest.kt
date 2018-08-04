@@ -16,10 +16,10 @@
 
 package ru.gildor.coroutines.retrofit
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Unconfined
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -32,7 +32,7 @@ import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.NullBodyCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
-import kotlin.coroutines.experimental.coroutineContext
+import kotlin.coroutines.coroutineContext
 
 private const val DONE = "Done!"
 
