@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018 Andrey Mischenko
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package ru.gildor.coroutines.retrofit
 
 import okhttp3.Response
@@ -12,8 +28,8 @@ public sealed class Result<out T : Any> {
      * Successful result of request without errors
      */
     public class Ok<out T : Any>(
-            public val value: T,
-            override val response: Response
+        public val value: T,
+        override val response: Response
     ) : Result<T>(), ResponseResult {
         override fun toString() = "Result.Ok{value=$value, response=$response}"
     }
@@ -22,8 +38,8 @@ public sealed class Result<out T : Any> {
      * HTTP error
      */
     public class Error(
-            override val exception: HttpException,
-            override val response: Response
+        override val exception: HttpException,
+        override val response: Response
     ) : Result<Nothing>(), ErrorResult, ResponseResult {
         override fun toString() = "Result.Error{exception=$exception}"
     }
@@ -33,7 +49,7 @@ public sealed class Result<out T : Any> {
      * exception occurred creating the request or processing the response
      */
     public class Exception(
-            override val exception: Throwable
+        override val exception: Throwable
     ) : Result<Nothing>(), ErrorResult {
         override fun toString() = "Result.Exception{$exception}"
     }
@@ -57,14 +73,12 @@ public interface ErrorResult {
 /**
  * Returns [Result.Ok.value] or `null`
  */
-public fun <T : Any> Result<T>.getOrNull(): T? =
-        if (this is Result.Ok) this.value else null
+public fun <T : Any> Result<T>.getOrNull(): T? = (this as? Result.Ok)?.value
 
 /**
  * Returns [Result.Ok.value] or [default]
  */
-public fun <T : Any> Result<T>.getOrDefault(default: T): T =
-        getOrNull() ?: default
+public fun <T : Any> Result<T>.getOrDefault(default: T): T = getOrNull() ?: default
 
 /**
  * Returns [Result.Ok.value] or throw [throwable] or [ErrorResult.exception]
