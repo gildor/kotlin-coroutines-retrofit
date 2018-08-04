@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.2.60"
+    id("org.jetbrains.kotlin.jvm") version "1.3-M1"
     id("com.jfrog.bintray") version "1.8.4"
     jacoco
     `maven-publish`
@@ -20,11 +20,12 @@ plugins {
 }
 
 group = "ru.gildor.coroutines"
-version = "0.12.0"
+version = "0.12.0-eap13"
 description = "Provides Kotlin Coroutines suspendable await() extensions for Retrofit Call"
 
 repositories {
     jcenter()
+    maven("http://dl.bintray.com/kotlin/kotlin-eap")
 }
 
 java {
@@ -34,13 +35,9 @@ java {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0-eap13")
     compile("com.squareup.retrofit2:retrofit:2.4.0")
     testCompile("junit:junit:4.12")
-}
-
-kotlin {
-    experimental.coroutines = Coroutines.ENABLE
 }
 
 /* Code coverage */
