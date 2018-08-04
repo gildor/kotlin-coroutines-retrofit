@@ -2,7 +2,6 @@ version: 2
 jobs:
   build:
     working_directory: ~/kotlin-coroutines-retrofit
-    shell: /bin/bash --login
     docker:
     - image: circleci/openjdk:8u171-jdk
     steps:
@@ -10,13 +9,40 @@ jobs:
     - restore_cache:
         keys:
         - kotlin-coroutines-retrofit
-    - run: ./gradlew clean build
+    - run:
+        name: Clean
+        command: ./gradlew clean
+    - run:
+        name: Build
+        command: ./gradlew build
     - save_cache:
         key: kotlin-coroutines-retrofit
         paths: ~/.gradle
-    # Code coverage report
-    - run: bash <(curl -s https://codecov.io/bash)
+    - run:
+        name: Publish code coverage
+        command: bash <(curl -s https://codecov.io/bash)
     - store_test_results:
         path: build/test-results
+    - store_artifacts:
+        path: build/libs
+  deploy:
+    working_directory: ~/kotlin-coroutines-retrofit
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+        - kotlin-coroutines-retrofit
+    - run:
+        name: Clean
+        command: ./gradlew clean
+    - run:
+        name: Build
+        command: ./gradlew build
+    - run:
+        name: Publish to Jcenter and Maven Central
+        command: ./gradlew bintrayUpload
+    - save_cache:
+        key: kotlin-coroutines-retrofit
+        paths: ~/.gradle
     - store_artifacts:
         path: build/libs
