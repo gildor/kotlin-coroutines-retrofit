@@ -34,7 +34,7 @@ public suspend fun <T : Any> Call<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T?>) {
-                continuation.resumeWith(SuccessOrFailure.runCatching {
+                continuation.resumeWith(runCatching {
                     if (response.isSuccessful) {
                         response.body()
                             ?: throw NullPointerException("Response body is null: $response")
@@ -89,7 +89,7 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
-                continuation.resumeWith(SuccessOrFailure.runCatching {
+                continuation.resumeWith(runCatching {
                     if (response.isSuccessful) {
                         val body = response.body()
                         if (body == null) {

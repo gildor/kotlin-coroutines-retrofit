@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.3-M1"
+    id("org.jetbrains.kotlin.jvm") version "1.3.0-rc-146"
     id("com.jfrog.bintray") version "1.8.4"
     jacoco
     `maven-publish`
@@ -35,7 +35,7 @@ java {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0-eap13")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.30.2-eap13")
     compile("com.squareup.retrofit2:retrofit:2.4.0")
     testCompile("junit:junit:4.12")
 }
@@ -78,7 +78,7 @@ val releaseTag = "v${project.version}"
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     classifier = "sources"
-    from(sourceSets["main"].allSource)
+    from(sourceSets["main"].allJava)
 }
 
 val javadocJar by tasks.creating(Jar::class) {
