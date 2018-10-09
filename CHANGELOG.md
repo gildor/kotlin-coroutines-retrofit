@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 0.13.0-eap13 (2017-10-10)
+
+- kotlinx.coroutines 0.30.2-eap13
+- Compiled against Kotlin 1.3.0-rc-146
+
+## Version 0.13.0 (2017-10-10)
+
+- [kotlinx.coroutines 0.30.2](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.30.2)
+- Compiled against Kotlin 1.2.71
+
 ## Version 0.12.0 (2017-08-04)
 
 - [kotlinx.coroutines 0.24.0](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.24.0)

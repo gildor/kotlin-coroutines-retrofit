@@ -17,7 +17,7 @@ Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#f
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0'
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.13.0'
 ```
 
 Maven:getOrThrow
@@ -26,17 +26,17 @@ Maven:getOrThrow
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
-  <version>0.12.0</version>
+  <version>0.13.0</version>
 </dependency>
 ```
 
-### If you use Kotlin 1.3 (including EAP): Version based on stable coroutines API
+### If you use Kotlin 1.3: Version based on stable coroutines API
 
 
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.12.0-eap13'
+compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.13.0-eap13'
 ```
 
 Maven:getOrThrow
@@ -45,7 +45,7 @@ Maven:getOrThrow
 <dependency>
   <groupId>ru.gildor.coroutines</groupId>
   <artifactId>kotlin-coroutines-retrofit</artifactId>
-  <version>0.12.0-eap13</version>
+  <version>0.13.0-eap13</version>
 </dependency>
 ```
 
