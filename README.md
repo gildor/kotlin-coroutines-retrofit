@@ -20,7 +20,7 @@ Gradle:
 compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.13.0'
 ```
 
-Maven:getOrThrow
+Maven:
 
 ```xml
 <dependency>
@@ -39,7 +39,7 @@ Gradle:
 compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:0.13.0-eap13'
 ```
 
-Maven:getOrThrow
+Maven:
 
 ```xml
 <dependency>
