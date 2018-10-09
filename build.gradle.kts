@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "ru.gildor.coroutines"
-version = "0.12.0-eap13"
+version = "0.13.0-eap13"
 description = "Provides Kotlin Coroutines suspendable await() extensions for Retrofit Call"
 
 repositories {
@@ -78,7 +78,7 @@ val releaseTag = "v${project.version}"
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     classifier = "sources"
-    from(java.sourceSets["main"].allSource)
+    from(sourceSets["main"].allSource)
 }
 
 val javadocJar by tasks.creating(Jar::class) {
