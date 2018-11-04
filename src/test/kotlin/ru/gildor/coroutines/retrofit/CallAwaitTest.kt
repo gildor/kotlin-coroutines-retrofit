@@ -16,8 +16,8 @@
 
 package ru.gildor.coroutines.retrofit
 
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
@@ -35,104 +35,105 @@ import ru.gildor.coroutines.retrofit.util.errorResponse
 
 private const val DONE = "Done!"
 
+@ExperimentalCoroutinesApi
 class CallAwaitTest {
     @Test
-    fun asyncSuccess() = testBlocking {
+    fun asyncSuccess() = runBlocking {
         assertEquals(DONE, MockedCall(DONE).await())
     }
 
     @Test(expected = HttpException::class)
-    fun asyncHttpException() = testBlocking {
+    fun asyncHttpException() = runBlocking {
         MockedCall<String>(error = HttpException(errorResponse<String>())).await()
     }
 
     @Test(expected = NullPointerException::class)
-    fun asyncNullBody() = testBlocking {
+    fun asyncNullBody() = runBlocking {
         NullBodyCall<String>().await()
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun asyncException() = testBlocking {
+    fun asyncException() = runBlocking {
         MockedCall<String>(exception = IllegalArgumentException("wrong get param")).await()
     }
 
     @Test
-    fun asyncResponseOk() = testBlocking {
+    fun asyncResponseOk() = runBlocking {
         val result = MockedCall(DONE).awaitResponse()
         assertEquals(DONE, result.body())
     }
 
     @Test
-    fun asyncResponseError() = testBlocking {
+    fun asyncResponseError() = runBlocking {
         val result = MockedCall<String>(error = HttpException(errorResponse<String>(500))).awaitResponse()
         assertEquals(500, result.code())
     }
 
     @Test
-    fun awaitRequestCancel() = testBlocking {
+    fun awaitRequestCancel() = runBlocking {
         checkJobCancel { it.await() }
     }
 
     @Test
-    fun awaitResponseRequestCancel() = testBlocking {
+    fun awaitResponseRequestCancel() = runBlocking {
         checkJobCancel { it.awaitResponse() }
     }
 
     @Test
-    fun awaitResultRequestCancel() = testBlocking {
+    fun awaitResultRequestCancel() = runBlocking {
         checkJobCancel { it.awaitResult() }
     }
 
     @Test
-    fun requestCancelWithException() = testBlocking {
+    fun requestCancelWithException() = runBlocking {
         checkRequestCancelWithException { it.awaitResponse() }
     }
 
     @Test
-    fun awaitRequestCancelWithException() = testBlocking {
+    fun awaitRequestCancelWithException() = runBlocking {
         checkRequestCancelWithException { it.await() }
     }
 
     @Test
-    fun awaitResultCancelWithException() = testBlocking {
+    fun awaitResultCancelWithException() = runBlocking {
         checkRequestCancelWithException { it.awaitResult() }
     }
 
     @Test(expected = IllegalArgumentException::class)
-    fun asyncResponseException() = testBlocking {
+    fun asyncResponseException() = runBlocking {
         MockedCall<String>(exception = IllegalArgumentException()).awaitResponse()
     }
 
     @Test
-    fun awaitJobCancelWithException() = testBlocking {
+    fun awaitJobCancelWithException() = runBlocking {
         checkJobCancelWithException { it.await() }
     }
 
     @Test
-    fun awaitResponseJobCancelWithException() = testBlocking {
+    fun awaitResponseJobCancelWithException() = runBlocking {
         checkJobCancelWithException { it.awaitResponse() }
     }
 
     @Test
-    fun awaitResultJobCancelWithException() = testBlocking {
+    fun awaitResultJobCancelWithException() = runBlocking {
         checkJobCancelWithException { it.awaitResult() }
     }
 
     @Test
-    fun asyncResponseNullBody() = testBlocking {
+    fun asyncResponseNullBody() = runBlocking {
         val result = NullBodyCall<String>().awaitResponse()
         assertNull(result.body())
     }
 
     @Test
-    fun asyncResponseNullableBody() = testBlocking {
+    fun asyncResponseNullableBody() = runBlocking {
         //Check that we can call awaitResponse() on nullable body
         val result = NullBodyCall<String?>().awaitResponse()
         assertNull(result.body())
     }
 
     @Test
-    fun asyncResponseFailure() = testBlocking {
+    fun asyncResponseFailure() = runBlocking {
         val exception = IllegalStateException()
         try {
             MockedCall<String>(exception = exception).awaitResult()
@@ -142,7 +143,7 @@ class CallAwaitTest {
     }
 
     @Test
-    fun asyncResultOk() = testBlocking {
+    fun asyncResultOk() = runBlocking {
         val result = MockedCall(DONE).awaitResult()
         when (result) {
             is Result.Ok -> {
@@ -155,19 +156,19 @@ class CallAwaitTest {
     }
 
     @Test
-    fun asyncResultNullBody() = testBlocking {
+    fun asyncResultNullBody() = runBlocking {
         val result = NullBodyCall<String>().awaitResult()
         assertNull(result.getOrNull())
     }
 
     @Test(expected = NullPointerException::class)
-    fun asyncResultNullPointerForNullBody() = testBlocking {
+    fun asyncResultNullPointerForNullBody() = runBlocking {
         val result = NullBodyCall<String>().awaitResult()
         assertNull(result.getOrThrow())
     }
 
     @Test
-    fun asyncResultByType() = testBlocking {
+    fun asyncResultByType() = runBlocking {
         val result = MockedCall(DONE).awaitResult()
         when (result) {
             is ResponseResult -> {
@@ -179,7 +180,7 @@ class CallAwaitTest {
     }
 
     @Test
-    fun resultOkTypes() = testBlocking {
+    fun resultOkTypes() = runBlocking {
         val result = MockedCall(DONE).awaitResult()
         if (result is ResponseResult) {
             // Mocked raw response doesn't contain body, but we can check code
@@ -190,7 +191,7 @@ class CallAwaitTest {
     }
 
     @Test
-    fun resultErrorTypes() = testBlocking {
+    fun resultErrorTypes() = runBlocking {
         val errorResponse = errorResponse<String>(500)
         val httpException = HttpException(errorResponse)
         val errorResult = MockedCall<String>(error = httpException).awaitResult()
@@ -209,7 +210,7 @@ class CallAwaitTest {
     }
 
     @Test
-    fun resultExceptionTypes() = testBlocking {
+    fun resultExceptionTypes() = runBlocking {
         val exception = IllegalStateException()
         val errorResult = MockedCall<String>(exception = exception).awaitResult()
 
@@ -222,7 +223,7 @@ class CallAwaitTest {
 
 
     @Test
-    fun asyncResultError() = testBlocking {
+    fun asyncResultError() = runBlocking {
         val error = HttpException(errorResponse<String>(500))
         val result = MockedCall<String>(error = error).awaitResult()
         when (result) {
@@ -238,7 +239,7 @@ class CallAwaitTest {
     }
 
     @Test
-    fun asyncResultException() = testBlocking {
+    fun asyncResultException() = runBlocking {
         val exception = IllegalArgumentException("wrong argument")
         val result = MockedCall<String>(exception = exception).awaitResult()
         when (result) {
@@ -253,13 +254,13 @@ class CallAwaitTest {
 
     private fun <T> checkRequestCancelWithException(
         block: suspend (Call<String>) -> T
-    ) = testBlocking {
+    ) = runBlocking {
         val request = MockedCall(
             ok = DONE,
             autoStart = false,
             cancelException = IllegalStateException()
         )
-        val async = async(coroutineContext, block = { block(request) })
+        val async = async(Dispatchers.Unconfined, block = { block(request) })
         //We shouldn't crash on cancel exception
         try {
             assertFalse(request.isCanceled)
@@ -270,12 +271,12 @@ class CallAwaitTest {
         }
     }
 
-    private fun <T> checkJobCancelWithException(block: suspend (Call<String>) -> T) = testBlocking {
+    private fun <T> checkJobCancelWithException(block: suspend (Call<String>) -> T) = runBlocking {
         val request = MockedCall<String>(
             exception = IllegalArgumentException(),
             autoStart = false
         )
-        val result = async(coroutineContext) {
+        val result = async(Dispatchers.Unconfined) {
             block(request)
         }
         result.cancel()
@@ -285,16 +286,14 @@ class CallAwaitTest {
 
     private fun <T> checkJobCancel(
         block: suspend (Call<String>) -> T
-    ) = testBlocking {
+    ) = runBlocking {
         val request = MockedCall(DONE, autoStart = false)
-        val async = async(coroutineContext) { block(request) }
+        val async = async(Dispatchers.Unconfined) { block(request) }
         assertFalse(request.isCanceled)
         async.cancel()
         assertTrue(request.isCanceled)
     }
+
 }
 
-private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {
-    runBlocking(Dispatchers.Unconfined, block)
-}
 
