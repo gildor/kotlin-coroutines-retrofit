@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Version 1.0.0 (2018-13-19)
+## Version 1.0.0 (2018-12-19)
 
 - kotlinx.coroutines 1.0.1
 - Compiled against Kotlin 1.3.11
@@ -21,19 +21,19 @@ First version of kotlin-coroutines-retrofit based on stable coroutines API from 
 Compiled against Kotlin 1.3-M1 and kotlinx.coroutines 0.24.0-eap13 (also based on stable API)
  
 
-## Version 0.12.0 (2017-08-04)
+## Version 0.12.0 (2018-08-04)
 
 - [kotlinx.coroutines 0.24.0](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.24.0)
 - Compiled against Kotlin 1.2.60
 
-## Version 0.11.0 (2017-06-12)
+## Version 0.11.0 (2018-06-12)
 
 - [kotlinx.coroutines 0.23.1](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.23.1)
 - Compiled against Kotlin 1.2.41
 
 Thanks to [Thomas Schmidt](https://github.com/bohsen) for contribution
 
-## Version 0.10.0 (2017-04-26)
+## Version 0.10.0 (2018-04-26)
 
 - [Retrofit 2.4.0](https://github.com/square/retrofit/blob/parent-2.4.0/CHANGELOG.md#version-240-2018-03-14)
 - [kotlinx.coroutines 0.22.5](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/0.22.5)
