@@ -16,10 +16,11 @@
 
 package ru.gildor.coroutines.retrofit
 
-import kotlinx.coroutines.experimental.CoroutineScope
-import kotlinx.coroutines.experimental.Unconfined
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -32,10 +33,10 @@ import retrofit2.HttpException
 import ru.gildor.coroutines.retrofit.util.MockedCall
 import ru.gildor.coroutines.retrofit.util.NullBodyCall
 import ru.gildor.coroutines.retrofit.util.errorResponse
-import kotlin.coroutines.experimental.coroutineContext
 
 private const val DONE = "Done!"
 
+@ExperimentalCoroutinesApi
 class CallAwaitTest {
     @Test
     fun asyncSuccess() = testBlocking {
@@ -260,7 +261,7 @@ class CallAwaitTest {
             autoStart = false,
             cancelException = IllegalStateException()
         )
-        val async = async(coroutineContext, block = { block(request) })
+        val async = async(Dispatchers.Unconfined, block = { block(request) })
         //We shouldn't crash on cancel exception
         try {
             assertFalse(request.isCanceled)
@@ -276,7 +277,7 @@ class CallAwaitTest {
             exception = IllegalArgumentException(),
             autoStart = false
         )
-        val result = async(coroutineContext) {
+        val result = async(Dispatchers.Unconfined) {
             block(request)
         }
         result.cancel()
@@ -288,14 +289,13 @@ class CallAwaitTest {
         block: suspend (Call<String>) -> T
     ) = testBlocking {
         val request = MockedCall(DONE, autoStart = false)
-        val async = async(coroutineContext) { block(request) }
+        val async = async(Dispatchers.Unconfined) { block(request) }
         assertFalse(request.isCanceled)
         async.cancel()
         assertTrue(request.isCanceled)
     }
+    
+    private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {
+        runBlocking(block = block)
+    }
 }
-
-private fun testBlocking(block: suspend CoroutineScope.() -> Unit) {
-    runBlocking(Unconfined, block)
-}
-

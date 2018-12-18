@@ -16,12 +16,14 @@
 
 package ru.gildor.coroutines.retrofit
 
-import kotlinx.coroutines.experimental.CancellableContinuation
-import kotlinx.coroutines.experimental.suspendCancellableCoroutine
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.suspendCancellableCoroutine
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.HttpException
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 
 /**
  * Suspend extension that allows suspend [Call] inside of a coroutine.
@@ -32,18 +34,14 @@ public suspend fun <T : Any> Call<T>.await(): T {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T?>) {
-                if (response.isSuccessful) {
-                    val body = response.body()
-                    if (body == null) {
-                        continuation.resumeWithException(
-                            NullPointerException("Response body is null: $response")
-                        )
+                continuation.resumeWith(runCatching {
+                    if (response.isSuccessful) {
+                        response.body()
+                            ?: throw NullPointerException("Response body is null: $response")
                     } else {
-                        continuation.resume(body)
+                        throw HttpException(response)
                     }
-                } else {
-                    continuation.resumeWithException(HttpException(response))
-                }
+                })
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {
@@ -91,7 +89,7 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
     return suspendCancellableCoroutine { continuation ->
         enqueue(object : Callback<T> {
             override fun onResponse(call: Call<T>?, response: Response<T>) {
-                continuation.resume(
+                continuation.resumeWith(runCatching {
                     if (response.isSuccessful) {
                         val body = response.body()
                         if (body == null) {
@@ -102,7 +100,7 @@ public suspend fun <T : Any> Call<T>.awaitResult(): Result<T> {
                     } else {
                         Result.Error(HttpException(response), response.raw())
                     }
-                )
+                })
             }
 
             override fun onFailure(call: Call<T>, t: Throwable) {

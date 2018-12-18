@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper
 
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.2.71"
+    id("org.jetbrains.kotlin.jvm") version "1.3.11"
     id("com.jfrog.bintray") version "1.8.4"
     jacoco
     `maven-publish`
@@ -20,7 +20,7 @@ plugins {
 }
 
 group = "ru.gildor.coroutines"
-version = "0.13.0"
+version = "1.0.0"
 description = "Provides Kotlin Coroutines suspendable await() extensions for Retrofit Call"
 
 repositories {
@@ -34,13 +34,9 @@ java {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:0.24.0")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.0.1")
     compile("com.squareup.retrofit2:retrofit:2.4.0")
     testCompile("junit:junit:4.12")
-}
-
-kotlin {
-    experimental.coroutines = Coroutines.ENABLE
 }
 
 /* Code coverage */
@@ -81,7 +77,7 @@ val releaseTag = "v${project.version}"
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     classifier = "sources"
-    from(sourceSets["main"].allSource)
+    from(sourceSets["main"].allJava)
 }
 
 val javadocJar by tasks.creating(Jar::class) {
