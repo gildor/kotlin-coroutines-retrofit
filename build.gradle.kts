@@ -77,7 +77,7 @@ val releaseTag = "v${project.version}"
 val sourcesJar by tasks.creating(Jar::class) {
     dependsOn("classes")
     classifier = "sources"
-    from(sourceSets["main"].allJava)
+    from(sourceSets["main"].allSource)
 }
 
 val javadocJar by tasks.creating(Jar::class) {
