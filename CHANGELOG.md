@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## Version 1.1.0 (2019-02-12)
+
+- [Retrofit 2.5.0](https://github.com/square/retrofit/blob/parent-2.5.0/CHANGELOG.md#version-250-2018-11-18)
+- [kotlinx.coroutines 1.1.1](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.1.1)
+- Compiled against Kotlin 1.3.21
+- Fixed javadoc and source code jars. Thanks to @erikhuizinga for contribution #47
+
 ## Version 1.0.0 (2018-12-19)
 
 - kotlinx.coroutines 1.0.1
