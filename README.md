@@ -19,7 +19,7 @@ Download the [JAR](https://bintray.com/gildor/maven/kotlin-coroutines-retrofit#f
 Gradle:
 
 ```groovy
-compile 'ru.gildor.coroutines:kotlin-coroutines-retrofit:1.1.0'
+implementation 'ru.gildor.coroutines:kotlin-coroutines-retrofit:1.1.0'
 ```
 
 Maven:
