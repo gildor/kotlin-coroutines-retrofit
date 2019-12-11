@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Version
+
+- [kotlinx.coroutines 1.2.2](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.2.2)
+
 ## Version 1.1.0 (2019-02-12)
 
 - [Retrofit 2.5.0](https://github.com/square/retrofit/blob/parent-2.5.0/CHANGELOG.md#version-250-2018-11-18)

@@ -28,7 +28,7 @@ java {
 
 dependencies {
     compile("org.jetbrains.kotlin:kotlin-stdlib")
-    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
+    compile("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.2")
     compile("com.squareup.retrofit2:retrofit:2.5.0")
     testCompile("junit:junit:4.12")
 }
