@@ -2,6 +2,7 @@
 
 ## Next Version
 
+- Compiled against [Kotlin 1.3.41](https://github.com/JetBrains/kotlin/releases/tag/v1.3.41)
 - [kotlinx.coroutines 1.2.2](https://github.com/Kotlin/kotlinx.coroutines/releases/tag/1.2.2)
 
 ## Version 1.1.0 (2019-02-12)

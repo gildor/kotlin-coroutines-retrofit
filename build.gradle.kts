@@ -8,7 +8,7 @@ import java.net.URL
 plugins {
     jacoco
     `maven-publish`
-    id("org.jetbrains.kotlin.jvm") version "1.3.21"
+    id("org.jetbrains.kotlin.jvm") version "1.3.41"
     id("com.jfrog.bintray") version "1.8.4"
     id("org.jetbrains.dokka") version "0.9.17"
 }
